@@ -1,0 +1,285 @@
+<!-- ###################################################################################################################### -->
+<!-- 
+Page de validation des données modifiées par les commerciaux et en attente de confirmation d'un responsable.
+Cette page est directement connectée au server.
+Fonction de validation ou d'annulation des modifications demandées.
+La page utilise Bootsrap et style.css pour le design et Un script AngularJS pour récupérer pour rapatrier, modifier et envoyer les données sujettes à modification.
+FONCTIONS : 
+	1: Vision du nombre de demandes de modification
+	2: Liste déroulante des clients à vérifier
+	3: Date de dernière modification du client sur la base approuvée
+	4: Date de dernière demande de modification
+	5: Possibilité de modifier les champs avant de valider
+	6: Notification par bordure ROUGE des modifications
+	7: Validation des modifications -> les modification sont inscrites dans la base approuvée et supprimer de la base de demande
+	8 : Annulation des modifications -> les modifications sont supprimés de la base de demande et le client de la base approuvé est modifié pour indiquer le rejet de la demande.
+-->
+<!-- ###################################################################################################################### -->
+
+
+<!doctype html>
+
+<html ng-app="myApp">
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../css/style.css"/>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+</head>
+<body ng-controller="MainCtrl">
+										<!-- HEADER -->
+	<header class="label label-primary navbar navbar-fixed-top">
+		<h4>Validation</h4>
+	</header>
+
+										<!-- CORPS -->
+	<div id="page"> 
+		<!-- Bloc de séléction MAJ -->
+		<div id="selection">
+			<div class="divSelect">
+				<div class="form-group">
+			    	<div class="col-lg-8 selection">
+						<select class="form-control" ng-model="client" ng-options="item.customer.Nomouraisonsociale for item in listCustomer" ng-change="getChanges(client.customer._id)">
+							<option value="" disabled>Sélection de la mise à jour</option>
+						</select>
+					</div>
+					<div class="col-lg-4">
+						<p class="textMAJ">Nbre de mise à jour en attente : <span class="badge compteur">{{listCustomer.length}}</span></p>
+			      	</div>
+			  	</div>
+			</div>
+		</div>
+
+										<!-- AFFICHAGE DES DONNEES DU CLIENT SELECTIONNE -->		
+		<div id="main">
+			<div>
+				<!-- Bar Coordonnées -->
+				<nav class="navbar navigation navValid">
+			    	<span class="navbar-brand">Coordonnées</span>
+				</nav>
+
+										<!-- BARRES DE DATE DES MISES A JOUR -->
+
+				<!-- Bar Date de mise à jour - pas de client sélectionné -->
+				<div class="col-lg-12" ng-show="customerDB.lastUpdate.date == null && client == null">
+				    <div class="divInfo2 form-control input-lg">
+				    	Dernière mise à jour de la base de données en date du {{dateDB.docUpdate | date:'medium'}}
+				    </div><!-- /input-group -->
+				</div><!-- /.col-lg-12 -->
+
+				<!-- Bar Date de mise à jour - un client sélectionné -->
+				<div class="row">
+					<!-- Barre de date de dernière modification du client en basse de données approuvée -->
+				    <div class="col-lg-6" ng-show="customerDB.lastUpdate.date != null && client != null">
+				    	<div class="divInfo form-control input-lg">
+				    		Dernière mise à jour en date du {{customerDB.lastUpdate.date | date:'medium'}}
+				    	</div><!-- /input-group -->
+				    </div><!-- /.col-lg-6 -->
+				    <div class="col-lg-6" ng-show="customerDB.lastUpdate.date == null && client != null">
+					    <div class="divInfo form-control input-lg">
+					    	Dernière mise à jour en date du {{dateDB.docUpdate | date:'medium'}}
+					    </div><!-- /input-group -->
+				    </div><!-- /.col-lg-6 -->
+
+				    <!-- Date de dernière demande de modification d'un client -->
+				    <div class="col-lg-6">
+					    <div class="divInfo form-control input-lg" ng-show="client != null">
+					    	Demande de mise à jour en date du {{customerDBU.date | date:'medium'}}
+					    </div><!-- /input-group -->
+				    </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+
+										<!-- CHAMPS DE COMPARAISON EXISTANT / DEMANDE DE MODIFICATION -->	
+
+				<!-- Input Raison Sociale -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-tag"></i></span> 
+				      	<input type="text" class="form-control inputValid" placeholder="Nom ou raison sociale" value="{{customerDB.Nomouraisonsociale}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Nom ou raison sociale" ng-model="customerDBU.customer.Nomouraisonsociale" ng-class="(customerDB.Nomouraisonsociale==customerDBU.customer.Nomouraisonsociale) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+
+				<!-- Input téléphone 1 -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-phone"></i></span>
+				      	<input type="text" class="form-control inputValid" placeholder="Téléphone 1" value="{{customerDB.Telephone}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Téléphone 1" ng-model="customerDBU.customer.Telephone" ng-class="(customerDB.Telephone==customerDBU.customer.Telephone) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+
+				<!-- Input téléphone 2 -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-phone"></i></span>
+				      	<input type="text" class="form-control inputValid" placeholder="Téléphone 2" value="{{customerDB.Telephone2}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Téléphone 2" ng-model="customerDBU.customer.Telephone2" ng-class="(customerDB.Telephone2==customerDBU.customer.Telephone2) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+
+				<!-- Input Email 1 -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-envelope"></i></span>
+				      	<input type="text" class="form-control inputValid" placeholder="Email 1" value="{{customerDB.EMail1}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Email 1" ng-model="customerDBU.customer.EMail1" ng-class="(customerDB.EMail1==customerDBU.customer.EMail1) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+
+				<!-- Input Email 2 -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-envelope"></i></span>
+				      	<input type="text" class="form-control inputValid" placeholder="Email 2" value="{{customerDB.EMail2}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Email 2" ng-model="customerDBU.customer.EMail2" ng-class="(customerDB.EMail2==customerDBU.customer.EMail2) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+
+				<!-- Input Adresse 1 -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-map-marker"></i></span>
+				      	<input type="text" class="form-control inputValid" placeholder="Adresse 1" value="{{customerDB.Adresse1}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Adresse 1" ng-model="customerDBU.customer.Adresse1" ng-class="(customerDB.Adresse1==customerDBU.customer.Adresse1) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+
+				<!-- Input Adresse 2 -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-map-marker"></i></span>
+				      	<input type="text" class="form-control inputValid" placeholder="Adresse 2" value="{{customerDB.Adresse2}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Adresse 2" ng-model="customerDBU.customer.Adresse2" ng-class="(customerDB.Adresse2==customerDBU.customer.Adresse2) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+
+				<!-- Input Code postal -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-envelope-alt"></i></span>
+				      	<input type="text" class="form-control inputValid" placeholder="Code Postale" value="{{customerDB.Codepostal}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Code Postale" ng-model="customerDBU.customer.Codepostal" ng-class="(customerDB.Codepostal==customerDBU.customer.Codepostal) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+
+				<!-- Input Ville -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-building"></i></span>
+				      	<input type="text" class="form-control inputValid" placeholder="Ville" value="{{customerDB.Ville}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Ville" ng-model="customerDBU.customer.Ville" ng-class="(customerDB.Ville==customerDBU.customer.Ville) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+			</div>
+
+			<div>
+				<nav class="navbar navigation navValid">
+			        <span class="navbar-brand">Contact</span>
+			    </nav>
+
+			    <!-- Input Interlocuteur 1 -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-user"></i></span>  
+				      	<input type="text" class="form-control inputValid" placeholder="Interlocuteur 1" value="{{customerDB.Interlocuteur1}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Interlocuteur 1" ng-model="customerDBU.customer.Interlocuteur1" ng-class="(customerDB.Interlocuteur1==customerDBU.customer.Interlocuteur1) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+
+				<!-- Input Interlocuteur 2 -->
+				<div class="row">
+				  <div class="col-lg-6">
+				    <div class="input-group divValid">
+				    	<span class="input-group-addon"><i class="icon-user"></i></span>  
+				      	<input type="text" class="form-control inputValid" placeholder="Interlocuteur 2" value="{{customerDB.Interlocuteur2}}" disabled>
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				  <div class="col-lg-6">
+				    <div class="divValid">
+				      <input type="text" class="form-control inputValid" placeholder="Interlocuteur 2" ng-model="customerDBU.customer.Interlocuteur2" ng-class="(customerDB.Interlocuteur2==customerDBU.customer.Interlocuteur2) ? '' : 'inputNotOk'">
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+				</div><!-- /.row -->
+			</div>
+
+										<!-- BOUTON DE VALIDATION -->
+			<div>
+				<div class="btn-group btn-group-justified btn-block form-actions validation" style="margin-top: 25px;">  
+			        <a href="#" class="btn btn-success" ng-click="valideChanges(customerDBU)">
+			            <i class="icon-ok icon-white"></i> Enregistrer modifications
+			        </a>  
+			        <a href="#" class="btn btn-warning" ng-click="cancelChanges(customerDB)">
+			            <i class="icon-remove-sign icon-large"></i> Annuler modifications
+			        </a>
+			    </div>
+		    </div>
+	    </div>
+	</div>
+
+	<script src="../../../script/angular/angular.min.js"></script>
+	<script src="../../../script/angular/angular-resource.min.js"></script>
+	<script src="../../../script/angular/angular-locale_fr-fr.js"></script>
+	<script src="../../../script/app.js"></script>
+</body>
+</html>

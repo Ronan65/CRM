@@ -1,0 +1,14 @@
+{
+  "name": "app-crm",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "3.3.x",
+    "nedb": "0.8.x",
+    "underscore": "1.5.x",
+    "w3c-cors": "0.2.x"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  }
+}

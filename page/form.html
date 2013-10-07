@@ -1,0 +1,76 @@
+<!-- ###################################################################################################################### -->
+<!-- 
+Page de mise à jour des données par import d'un fichier CVS.
+Cette page est directement connectée au server.
+Fonction de Drag and Drop ou de choix du fichier par une sélection sur l'ordinateur.
+La page utilise Bootsrap et Upload.css pour le design et Un script "scripDrag" pour l'envoie du fichier
+-->
+<!-- ###################################################################################################################### -->
+
+<!doctype html>
+
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../../../css/upload.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css"/>
+</head>
+<body>
+										<!-- HEADER -->
+
+	<header class="label label-primary navbar navbar-fixed-top">
+		<h4>Mise à jour</h4>
+	</header>
+
+										<!-- FONCTIONNALITE SELECTION FICHIER -->
+
+	<div id="darganddrop">
+
+		<!-- Zone de chargement du fichier -->
+		<div class="jumbotron" style="padding-top: 100px">
+			<div id='alert' class="alert alert-danger" style="display:none;">Merci de sélectionner un fichier.</div>
+
+			<form action="/db/upload" method="POST" enctype="multipart/form-data">
+				<!-- Zone de drag and drop -->
+				<div id="target" name="target" class="target">
+					<span id="targetName">GLISSER VOTRE FICHIER ICI</span>
+				</div>
+				<!-- Affichage du nom du fichier sélectionner -->
+				<div id="inputName" class="target" style="display:none;">
+					<span id="inputFileName"></span>
+				</div>
+				<!-- Texte OU -->
+				<p id="choix" style="padding-top: 20px; text-align: center;">OU</p>
+				<!-- Bouton de sélection sur l'ordinateur -->
+				<a href="#" id="choose" class="btn btn-primary btn-lg btn-block" onClick="getFile();">
+	                <i class="icon-ok icon-white"></i> Ajouter un fichier
+	            </a>
+	            <!-- Input type file CACHE et appelé par le bouton "Ajouter un fichier" -->
+				<input type="file" id="loadDB" name="loadDB" accept=".csv" style="padding-top: 20px; padding-left: 500px" onchange="displayDrag(this);checkfile(this);"/> 
+			</form>
+
+		</div>
+
+		<!-- Zone de validation -->
+		<div class="validation">
+			<!-- Bouton de validation -->
+			 <div class="btn-group btn-group-justified btn-block form-actions" style="padding-right: 10px; padding-left: 10px;margin-top:40px;margin-bottom:20px;">  
+	            <a href="#" id="submit" class="btn btn-success" onClick="upload(this);">
+	                <i class="icon-ok icon-white"></i> Envoyer
+	            </a>  
+	            <a href="#" id="cancel" class="btn btn-danger" onClick="window.location.reload()">
+	                <i class="icon-remove-sign icon-large"></i> Annuler
+	            </a>
+	        </div>
+	        <!-- Barre de progession du chargement du fichier -->
+			<div class="progress">
+			  <div id="progress-bar" class="progress-bar progress-bar-warning" role="progressbar"  aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+			    <span class="sr-only">60% Complete</span>
+			  </div>
+			</div>
+
+		</div>
+	</div>
+<script src="../../../script/scriptDrag.js"></script>
+</body>
+</html>

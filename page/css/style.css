@@ -1,0 +1,95 @@
+/*Style pour les pages de validation et statistique de l'API*/
+
+body{
+	padding: 20px;
+	margin: auto;
+}
+
+header {
+    min-height: 45px; 
+    background-image: linear-gradient(to bottom, #1eb0e9 0, #109adc 100%); 
+    margin:0; 
+    border-bottom:1px solid #0e5895
+}
+
+.navValid{
+    border-right:1px solid #aaa;
+    border-left:1px solid #aaa;
+    border-top:1px solid #aaa;
+    border-bottom: 1px solid #aaa;
+    margin:auto;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.compteur{
+    background-image: linear-gradient(to bottom, #1eb0e9 0, #109adc 100%); 
+}
+
+.divInfo{
+    margin-top: 4px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-shadow: 10px 10px 5px #888888;
+    background-image: linear-gradient(to bottom, #1eb0e9 0, #109adc 100%);
+    color: #fff;
+}
+
+.divInfo2{
+    text-align: center;
+    margin-top: 4px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-shadow: 10px 10px 5px #888888;
+    background: #c9de96; /* Old browsers */
+    background: -moz-linear-gradient(top,  #c9de96 0%, #8ab66b 44%, #398235 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c9de96), color-stop(44%,#8ab66b), color-stop(100%,#398235)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #c9de96 0%,#8ab66b 44%,#398235 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #c9de96 0%,#8ab66b 44%,#398235 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #c9de96 0%,#8ab66b 44%,#398235 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #c9de96 0%,#8ab66b 44%,#398235 100%); /* W3C */
+    color: #fff;
+}
+
+.divSelect{
+	padding-top: 50px; 
+	padding-bottom: 30px;
+}
+
+.divValid{
+	margin-top: 4px;
+    width: 100%;
+}
+
+.divValid>span{
+    width: 40px;
+}
+
+.inputValid{
+	height: 42px;
+}
+
+.badge{
+    padding: 4px 7px;
+    line-height: 1.5;
+}
+
+.selection{
+    margin-left: -15px;
+}
+
+.textMAJ{
+    float: right;
+    line-height: 38px;
+    font-size: 16px;
+}
+
+.inputOk{
+    border-color: green;
+}
+
+.inputNotOk{
+    box-shadow: 5px 5px 5px #888888;
+    border-color: red;
+}

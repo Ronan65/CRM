@@ -1,0 +1,49 @@
+<!-- ###################################################################################################################### -->
+<!-- 
+Page vers laquelle on est redirigé après un chargement CSV.
+Cette page est directement connectée au server.
+Fonction d'affichage des Statistiques de chargement du fichier..
+La page utilise Bootsrap et Upload.css pour le design et Un script "scripStat" pour récupérer les stats sur le serveur
+-->
+<!-- ###################################################################################################################### -->
+
+<!doctype html>
+
+<html>
+<head>
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="../../../css/upload.css"/>
+	<link rel="stylesheet" type="text/css" href="../../../css/bootstrap.min.css"/>
+</head>
+<body>
+
+										<!-- HEADER -->
+
+	<header class="label label-primary navbar navbar-fixed-top">
+		<h4>INFORMATIONS</h4>
+	</header>
+
+										<!-- FONCTIONNALITE DE STATISTIQUE -->
+
+	<div class="jumbotron" style="text-align: center; padding-top: 100px;" onclick="getStat()">
+		<div class="container">
+			<h2>Cliquez ici pour obtenir les informations sur votre mise à jour</h2>
+			<div>
+				<p id="date"></p>
+				<p id="taille"></p>
+				<p id="nbr"></p>
+			</div>
+		</div>
+	</div>
+
+										<!-- LIENS POUR QUITTER LA PAGE -->
+
+	<div style="text-align: center;">
+		<a href="#" onclick="_closeWindow()" class="btn btn-primary btn-lg">Quitter l'application</a></br>
+		<a href="https://localhost:1443">Accéder à l'application</a>
+	</div>
+
+
+	<script src="../../../script/scriptStat.js"></script>
+</body>
+</html>

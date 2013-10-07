@@ -1,0 +1,34 @@
+/*Style pour la page d'upload' de l'API*/
+
+header{
+	min-height: 45px; 
+	background-image: linear-gradient(to bottom, #1eb0e9 0, #109adc 100%); 
+	margin:0; 
+	border-bottom:1px solid #0e5895;
+}
+
+.target {
+	border: thick dashed #1eb0e9;
+	margin-bottom: 20px;
+	text-align: center;
+	min-height: 150px;
+	height: 150px; 
+	background-color: #B0E0E6;
+}
+
+.target>span {
+	color: #1eb0e9;
+	line-height:130px;
+}
+
+#loadDB{
+	display: none;
+}
+
+.jumbotron {
+	background-color: #C0C0C0;
+}
+
+.validation {
+	padding: 20px;
+}
