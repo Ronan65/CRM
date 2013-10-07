@@ -30,7 +30,7 @@ app.configure ->
 
 require('./routes/routes.js')(app)
 
-https.createServer(options, app).listen 8443
+app.listen 80
 
 
 # Server client
